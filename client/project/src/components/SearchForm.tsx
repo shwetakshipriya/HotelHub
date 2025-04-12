@@ -33,7 +33,6 @@ const SearchForm: React.FC = () => {
 
   const handleCheckInChange = (date: Date | null) => {
     setCheckInDate(date);
-    // If check-out date is before new check-in date, update it
     if (date && checkOutDate && checkOutDate <= date) {
       const nextDay = new Date(date);
       nextDay.setDate(date.getDate() + 1);
@@ -42,10 +41,7 @@ const SearchForm: React.FC = () => {
   };
 
   const handleCheckOutChange = (date: Date | null) => {
-    if (date && checkInDate && date <= checkInDate) {
-      // If selected check-out is before check-in, don't update
-      return;
-    }
+    if (date && checkInDate && date <= checkInDate) return;
     setCheckOutDate(date);
   };
 
@@ -61,16 +57,14 @@ const SearchForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
     const searchParams = new URLSearchParams({
-      destination: destination || 'Mumbai',
-      checkIn: checkInDate ? checkInDate.toISOString().split('T')[0] : '',
-      checkOut: checkOutDate ? checkOutDate.toISOString().split('T')[0] : '',
+      destination: destination || "Mumbai",
+      checkIn: checkInDate ? checkInDate.toISOString().split("T")[0] : "",
+      checkOut: checkOutDate ? checkOutDate.toISOString().split("T")[0] : "",
       adults: adults.toString(),
       children: children.toString(),
-      rooms: rooms.toString()
+      rooms: rooms.toString(),
     });
-
     navigate(`/hotels?${searchParams.toString()}`);
   };
 
@@ -79,36 +73,40 @@ const SearchForm: React.FC = () => {
       onSubmit={handleSubmit}
       className="bg-white/30 backdrop-blur-lg text-white p-6 rounded-lg shadow-xl border-white/40 w-full max-w-7xl mx-auto mt-6"
     >
-      <div className="flex flex-col md:flex-row gap-4 relative">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        {/* Destination */}
         <input
           type="text"
           placeholder="Destination or hotel"
-          className="p-3 rounded-lg text-black flex-1 min-w-[180px] bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm placeholder-gray-500"
+          className="h-12 w-full px-3 rounded-lg text-black bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm placeholder-gray-500"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
         />
 
+        {/* Check-in Date */}
         <DatePicker
           selected={checkInDate}
           onChange={handleCheckInChange}
           placeholderText="Check-in"
           minDate={today}
-          className="p-3 rounded-lg text-black flex-1 min-w-[140px] bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm placeholder-gray-500"
+          className="h-12 w-full px-3 rounded-lg text-black bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm placeholder-gray-500"
         />
 
+        {/* Check-out Date */}
         <DatePicker
           selected={checkOutDate}
           onChange={handleCheckOutChange}
           placeholderText="Check-out"
           minDate={checkInDate ? new Date(checkInDate.getTime() + 86400000) : today}
-          className="p-3 rounded-lg text-black flex-1 min-w-[140px] bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm placeholder-gray-500"
+          className="h-12 w-full px-3 rounded-lg text-black bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm placeholder-gray-500"
         />
 
-        <div className="relative min-w-[220px]" ref={dropdownRef}>
+        {/* Guests Dropdown */}
+        <div className="relative w-full" ref={dropdownRef}>
           <button
             type="button"
             onClick={() => setShowOptions(!showOptions)}
-            className="p-3 rounded-lg text-black flex-1 min-w-[220px] bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm text-left"
+            className="h-12 w-full px-3 rounded-lg text-left text-black bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm"
           >
             {adults} adults, {children} children, {rooms} room
           </button>
@@ -119,21 +117,9 @@ const SearchForm: React.FC = () => {
               <div className="flex items-center justify-between mb-2">
                 <span>Adults</span>
                 <div className="flex items-center space-x-2">
-                  <button
-                    type="button"
-                    onClick={() => setAdults(Math.max(1, adults - 1))}
-                    className="px-2 bg-gray-200 rounded"
-                  >
-                    -
-                  </button>
+                  <button type="button" onClick={() => setAdults(Math.max(1, adults - 1))} className="px-2 bg-gray-200 rounded">-</button>
                   <span>{adults}</span>
-                  <button
-                    type="button"
-                    onClick={() => setAdults(adults + 1)}
-                    className="px-2 bg-gray-200 rounded"
-                  >
-                    +
-                  </button>
+                  <button type="button" onClick={() => setAdults(adults + 1)} className="px-2 bg-gray-200 rounded">+</button>
                 </div>
               </div>
 
@@ -141,21 +127,9 @@ const SearchForm: React.FC = () => {
               <div className="flex items-center justify-between mb-2">
                 <span>Children</span>
                 <div className="flex items-center space-x-2">
-                  <button
-                    type="button"
-                    onClick={() => handleChildrenChange(children - 1)}
-                    className="px-2 bg-gray-200 rounded"
-                  >
-                    -
-                  </button>
+                  <button type="button" onClick={() => handleChildrenChange(children - 1)} className="px-2 bg-gray-200 rounded">-</button>
                   <span>{children}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleChildrenChange(children + 1)}
-                    className="px-2 bg-gray-200 rounded"
-                  >
-                    +
-                  </button>
+                  <button type="button" onClick={() => handleChildrenChange(children + 1)} className="px-2 bg-gray-200 rounded">+</button>
                 </div>
               </div>
 
@@ -190,32 +164,21 @@ const SearchForm: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span>Rooms</span>
                 <div className="flex items-center space-x-2">
-                  <button
-                    type="button"
-                    onClick={() => setRooms(Math.max(1, rooms - 1))}
-                    className="px-2 bg-gray-200 rounded"
-                  >
-                    -
-                  </button>
+                  <button type="button" onClick={() => setRooms(Math.max(1, rooms - 1))} className="px-2 bg-gray-200 rounded">-</button>
                   <span>{rooms}</span>
-                  <button
-                    type="button"
-                    onClick={() => setRooms(rooms + 1)}
-                    className="px-2 bg-gray-200 rounded"
-                  >
-                    +
-                  </button>
+                  <button type="button" onClick={() => setRooms(rooms + 1)} className="px-2 bg-gray-200 rounded">+</button>
                 </div>
               </div>
             </div>
           )}
         </div>
-      </div>
 
-      {/* Submit Button */}
-      <div className="flex justify-end mt-4">
-        <button type="submit" className="px-6 py-2 bg-blue-600 rounded text-white hover:bg-blue-700">
-          Search hotels →
+        {/* Submit */}
+        <button
+          type="submit"
+          className="h-12 w-full px-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+        >
+          Search →
         </button>
       </div>
     </form>
